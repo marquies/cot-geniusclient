@@ -27,13 +27,14 @@ public class MainApp extends Application {
 			primaryStage.show();
 			
 			 // Give the controller access to the main app.
-	        RootLayoutController controller = loader.getController();
+	        RootLayoutController controller = (RootLayoutController) loader.getController();
 	        controller.setMainApp(this);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	@Override
+	
+	//@Override
 	public void start(Stage primaryStage) {
 		this.primaryStage = primaryStage;
 		this.primaryStage.setTitle("Cloud of Things - Genius Client");

@@ -18,11 +18,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
 
 public class TabbedMainController implements Initializable, MapComponentInitializedListener {
-	
-    @FXML
+
+	@FXML
 	GoogleMapView mapView;
-    
-    
+
 	GoogleMap map;
 
 	@FXML
@@ -30,7 +29,6 @@ public class TabbedMainController implements Initializable, MapComponentInitiali
 
 	@FXML
 	private TabPane tabPane;
-
 
 	@Override
 	public void mapInitialized() {
@@ -45,12 +43,11 @@ public class TabbedMainController implements Initializable, MapComponentInitiali
 
 		// Add a marker to the map
 		MarkerOptions markerOptions = new MarkerOptions();
-		
 
 		markerOptions.position(new LatLong(47.6, -122.3)).visible(Boolean.TRUE).title("My Marker");
 
 		Marker marker = new Marker(markerOptions);
-	marker.setDraggable(true);
+		marker.setDraggable(true);
 
 		map.addMarker(marker);
 	}
@@ -58,8 +55,6 @@ public class TabbedMainController implements Initializable, MapComponentInitiali
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		mapView.addMapInializedListener(this);
-
-				
 	}
 
 }
