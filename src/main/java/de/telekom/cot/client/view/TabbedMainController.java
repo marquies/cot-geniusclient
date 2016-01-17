@@ -10,6 +10,9 @@ import com.lynden.gmapsfx.javascript.object.LatLong;
 import com.lynden.gmapsfx.javascript.object.MapOptions;
 import com.lynden.gmapsfx.javascript.object.Marker;
 import com.lynden.gmapsfx.javascript.object.MarkerOptions;
+
+import de.telekom.cot.client.MainApp;
+
 import com.lynden.gmapsfx.javascript.object.MapTypeIdEnum;
 
 import javafx.fxml.FXML;
@@ -29,6 +32,8 @@ public class TabbedMainController implements Initializable, MapComponentInitiali
 
 	@FXML
 	private TabPane tabPane;
+
+	private MainApp setMainApp;
 
 	@Override
 	public void mapInitialized() {
@@ -55,6 +60,10 @@ public class TabbedMainController implements Initializable, MapComponentInitiali
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		mapView.addMapInializedListener(this);
+	}
+
+	public void setMainApp(MainApp mainApp) {
+		this.setMainApp = mainApp;
 	}
 
 }
