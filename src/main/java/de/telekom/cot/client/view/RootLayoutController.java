@@ -14,20 +14,13 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 
 public class RootLayoutController implements Initializable {
 
 	@FXML
-	private TreeView treeView;
-
-	@FXML
 	private TabPane tabPane;
 	
-	@FXML
-	private TreeItem<String> treeItem;
-
 	// Reference to the main application.
 	private MainApp mainApp;
 
@@ -63,23 +56,9 @@ public class RootLayoutController implements Initializable {
 	public void setMainApp(MainApp mainApp) {
 		this.mainApp = mainApp;
 		
-		mainApp.getDeviceData().addListener(new ListChangeListener<String>() {
-
-			@Override
-			public void onChanged(javafx.collections.ListChangeListener.Change<? extends String> c) {
-				updateTreeList();
-			}
-
-		});
+		
 	}
-	private void updateTreeList() {
-		ObservableList<String> list = mainApp.getDeviceData();
-		treeView.getRoot().getChildren().clear();
-		for (String string : list) {
-			TreeItem<String> item = new TreeItem<String>(string);
-			treeView.getRoot().getChildren().add(item);
-		}
-	}
+	
 
 	@FXML
 	private void exitApplication() {
@@ -88,21 +67,10 @@ public class RootLayoutController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		TreeItem<String> rootItem = new TreeItem<>(new String("Devices"));
-		rootItem.setExpanded(true);
-		treeView.setRoot(rootItem);
-		
-//      personTable.getSelectionModel().selectedItemProperty().addListener(
-//      (observable, oldValue, newValue) -> showPersonDetails(newValue));
-		
-		treeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> showDevice(newValue));
 
 	}
 
-	private void showDevice(Object newValue) {
-		mainApp.showDevice(newValue);
-	}
-
+	
 	@FXML
 	private void addNewDevice() {
 		String device1 = new String("New Device");

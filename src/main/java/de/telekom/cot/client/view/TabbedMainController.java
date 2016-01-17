@@ -15,12 +15,15 @@ import de.telekom.cot.client.MainApp;
 
 import com.lynden.gmapsfx.javascript.object.MapTypeIdEnum;
 
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 
 public class TabbedMainController implements Initializable, MapComponentInitializedListener {
 
@@ -38,7 +41,15 @@ public class TabbedMainController implements Initializable, MapComponentInitiali
 	@FXML
 	private TextField deviceName;
 
-	private MainApp setMainApp;
+	private MainApp mainApp;
+
+	@FXML
+	private TreeView treeView;
+
+	@FXML
+	private TreeItem<String> treeItem;
+
+	private TreeItem<String> rootItem;
 
 	@Override
 	public void mapInitialized() {
@@ -65,14 +76,40 @@ public class TabbedMainController implements Initializable, MapComponentInitiali
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		mapView.addMapInializedListener(this);
+		
+		rootItem = new TreeItem<>(new String("Devices"));
+		rootItem.setExpanded(true);
+		treeView.setRoot(rootItem);
+		
+		treeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> showDevice(newValue));
 	}
 
 	public void setMainApp(MainApp mainApp) {
-		this.setMainApp = mainApp;
+		this.mainApp = mainApp;
+		
+		mainApp.getDeviceData().addListener(new ListChangeListener<String>() {
+
+			@Override
+			public void onChanged(javafx.collections.ListChangeListener.Change<? extends String> c) {
+				updateTreeList();
+			}
+
+		});
 	}
+	
+	private void updateTreeList() {
+		ObservableList<String> list = mainApp.getDeviceData();
+		treeView.getRoot().getChildren().clear();
+		for (String string : list) {
+			TreeItem<String> item = new TreeItem<String>(string);
+			treeView.getRoot().getChildren().add(item);
+		}
+	}
+
 
 	public void showDevice(Object newValue) {
 		System.out.println("Value " + newValue);
+		if (newValue != rootItem)
 		deviceName.setText(((TreeItem<String>)newValue).getValue());
 	}
 	

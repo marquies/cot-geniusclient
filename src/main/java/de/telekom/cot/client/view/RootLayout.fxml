@@ -4,7 +4,6 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
-<?import controls.TreeViewWithItems?>
 
 <BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.telekom.cot.client.view.RootLayoutController">
    <top>
@@ -29,7 +28,4 @@
         </menus>
       </MenuBar>
    </top>
-   <left>
-      <TreeViewWithItems  fx:id="treeView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
-   </left>
 </BorderPane>
