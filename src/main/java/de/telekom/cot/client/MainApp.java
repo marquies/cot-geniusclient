@@ -2,6 +2,7 @@ package de.telekom.cot.client;
 
 import java.io.IOException;
 
+import de.telekom.cot.client.model.ManagedObject;
 import de.telekom.cot.client.view.RootLayoutController;
 import de.telekom.cot.client.view.TabbedMainController;
 import javafx.application.Application;
@@ -18,10 +19,10 @@ public class MainApp extends Application {
 	private Stage primaryStage;
 	private BorderPane rootLayout;
 	private TreeItem<String> rootItem;
-	private ObservableList<String> deviceData = FXCollections.observableArrayList();
+	private ObservableList<ManagedObject> deviceData = FXCollections.observableArrayList();
 	private TabbedMainController tabbedMainController;
 
-	public ObservableList<String> getDeviceData() {
+	public ObservableList<ManagedObject> getDeviceData() {
 		return deviceData;
 	}
 	
@@ -86,7 +87,7 @@ public class MainApp extends Application {
 	}
 
 
-	public void showDevice(Object newValue) {
+	public void showDevice(ManagedObject newValue) {
 		tabbedMainController.showDevice(newValue);
 	}
 }

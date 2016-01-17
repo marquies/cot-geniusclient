@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import de.telekom.cot.client.MainApp;
+import de.telekom.cot.client.model.ManagedObject;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -20,33 +21,17 @@ public class RootLayoutController implements Initializable {
 
 	@FXML
 	private TabPane tabPane;
-	
+
 	// Reference to the main application.
 	private MainApp mainApp;
-
 
 	public RootLayoutController() {
 
 	}
 	
-	  /**
-     * Initializes the controller class. This method is automatically called
-     * after the fxml file has been loaded.
-     */
-    private void initialize() {
-    	
-        // Initialize the person table with the two columns.
-//        firstNameColumn.setCellValueFactory(cellData -> cellData.getValue().firstNameProperty());
-//        lastNameColumn.setCellValueFactory(cellData -> cellData.getValue().lastNameProperty());
-//        
-//        // Clear person details.
-//        showPersonDetails(null);
-//
-//        // Listen for selection changes and show the person details when changed.
-//        personTable.getSelectionModel().selectedItemProperty().addListener(
-//                (observable, oldValue, newValue) -> showPersonDetails(newValue));
-    }
-
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+	}
 
 	/**
 	 * Is called by the main application to give a reference back to itself.
@@ -55,26 +40,17 @@ public class RootLayoutController implements Initializable {
 	 */
 	public void setMainApp(MainApp mainApp) {
 		this.mainApp = mainApp;
-		
-		
 	}
-	
 
 	@FXML
 	private void exitApplication() {
 		Platform.exit();
 	}
 
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-
-	}
-
-	
 	@FXML
 	private void addNewDevice() {
 		String device1 = new String("New Device");
-		mainApp.getDeviceData().add(device1);
+		mainApp.getDeviceData().add(new ManagedObject(device1));
 
 	}
 

@@ -5,12 +5,16 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import com.lynden.gmapsfx.*?>
+<?import javafx.scene.control.TableView?>
 
 <AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.telekom.cot.client.view.TabbedMainController">
 	<children>
       <SplitPane dividerPositions="0.2491638795986622" prefHeight="600.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <items>
-            <TreeView fx:id="treeView" prefHeight="298.0" prefWidth="181.0" />
+            <TableView fx:id="tableView" prefHeight="298.0" prefWidth="181.0">
+               <columns>
+                  <TableColumn fx:id="deviceNameColumn" prefWidth="195.0" text="Devices" />
+               </columns></TableView>
       		<TabPane fx:id="tabPane" prefHeight="298.0" prefWidth="494.0" tabClosingPolicy="UNAVAILABLE">
       			<tabs>
       				<Tab text="General">
