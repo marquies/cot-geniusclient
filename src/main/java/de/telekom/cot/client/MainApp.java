@@ -19,6 +19,7 @@ public class MainApp extends Application {
 	private BorderPane rootLayout;
 	private TreeItem<String> rootItem;
 	private ObservableList<String> deviceData = FXCollections.observableArrayList();
+	private TabbedMainController tabbedMainController;
 
 	public ObservableList<String> getDeviceData() {
 		return deviceData;
@@ -72,9 +73,8 @@ public class MainApp extends Application {
 			
 			rootLayout.setCenter(tabbedMain);
 
-			// Give the controller access to the main app.
-			TabbedMainController controller = loader.getController();
-			controller.setMainApp(this);
+			tabbedMainController = loader.getController();
+			tabbedMainController.setMainApp(this);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -87,6 +87,6 @@ public class MainApp extends Application {
 
 
 	public void showDevice(Object newValue) {
-		System.out.println("Value: "+ newValue);
+		tabbedMainController.showDevice(newValue);
 	}
 }

@@ -19,6 +19,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TreeItem;
 
 public class TabbedMainController implements Initializable, MapComponentInitializedListener {
 
@@ -32,6 +34,9 @@ public class TabbedMainController implements Initializable, MapComponentInitiali
 
 	@FXML
 	private TabPane tabPane;
+	
+	@FXML
+	private TextField deviceName;
 
 	private MainApp setMainApp;
 
@@ -65,5 +70,17 @@ public class TabbedMainController implements Initializable, MapComponentInitiali
 	public void setMainApp(MainApp mainApp) {
 		this.setMainApp = mainApp;
 	}
+
+	public void showDevice(Object newValue) {
+		System.out.println("Value " + newValue);
+		deviceName.setText(((TreeItem<String>)newValue).getValue());
+	}
+	
+	@FXML
+	private void handleDeleteDevice() {
+		
+	}
+	
+	
 
 }

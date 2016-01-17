@@ -29,14 +29,14 @@
 										<Label text="Name" GridPane.rowIndex="1" />
 										<Label text="Status" GridPane.rowIndex="2" />
 										<Label fx:id="idLabel" text="Label" GridPane.columnIndex="1" />
-                              <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <TextField fx:id="deviceName" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 									</children>
 								</GridPane>
 								<ButtonBar layoutX="386.0" layoutY="213.0" prefHeight="40.0" prefWidth="581.0" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0">
 									<buttons>
 										<Button mnemonicParsing="false" prefHeight="21.0" prefWidth="200.0" text="Register Step 1" />
 										<Button mnemonicParsing="false" text="Register Step 2" />
-										<Button mnemonicParsing="false" text="Delete" />
+										<Button mnemonicParsing="false" onAction="#handleDeleteDevice" text="Delete" />
 									</buttons>
 								</ButtonBar>
 							</children>
