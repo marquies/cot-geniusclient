@@ -30,6 +30,9 @@
       										<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
       										<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
       										<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
       									</rowConstraints>
       									<children>
       										<Label text="ID" />
@@ -37,13 +40,19 @@
       										<Label text="Status" GridPane.rowIndex="2" />
       										<Label fx:id="idLabel" text="Label" GridPane.columnIndex="1" />
                                     <TextField fx:id="deviceName" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <Label text="Model" GridPane.rowIndex="3" />
+                                    <Label text="Serial Number" GridPane.rowIndex="4" />
+                                    <Label text="Revision" GridPane.rowIndex="5" />
+                                    <TextField GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                    <TextField GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                    <TextField GridPane.columnIndex="1" GridPane.rowIndex="5" />
       									</children>
       								</GridPane>
       								<ButtonBar layoutX="386.0" layoutY="213.0" prefHeight="40.0" prefWidth="581.0" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0">
       									<buttons>
-      										<Button mnemonicParsing="false" prefHeight="21.0" prefWidth="200.0" text="Register Step 1" />
-      										<Button mnemonicParsing="false" text="Register Step 2" />
-      										<Button mnemonicParsing="false" onAction="#handleDeleteDevice" text="Delete" />
+      										<Button mnemonicParsing="false" onAction="#handleRegisterDeviceStep1" prefHeight="27.0" prefWidth="200.0" text="Register Step 1" />
+      										<Button mnemonicParsing="false" onAction="#handleRegisterDeviceStep2" text="Register Step 2" />
+      										<Button mnemonicParsing="false" onAction="#handleUnregisterDevice" text="Delete in CoT" />
       									</buttons>
       								</ButtonBar>
       							</children>

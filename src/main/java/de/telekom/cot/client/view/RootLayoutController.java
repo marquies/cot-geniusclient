@@ -51,7 +51,5 @@ public class RootLayoutController implements Initializable {
 	private void addNewDevice() {
 		String device1 = new String("New Device");
 		mainApp.getDeviceData().add(new ManagedObject(device1));
-
 	}
-
 }

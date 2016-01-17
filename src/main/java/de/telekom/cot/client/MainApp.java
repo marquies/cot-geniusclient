@@ -38,7 +38,6 @@ public class MainApp extends Application {
 			primaryStage.setScene(scene);
 			primaryStage.show();
 
-			// Give the controller access to the main app.
 			RootLayoutController controller = (RootLayoutController) loader.getController();
 			controller.setMainApp(this);
 	
@@ -46,7 +45,6 @@ public class MainApp extends Application {
 
 			rootItem.setExpanded(true);
 			
-			//controller.updateDevices(deviceData);
 
 			
 
@@ -55,7 +53,6 @@ public class MainApp extends Application {
 		}
 	}
 
-	// @Override
 	public void start(Stage primaryStage) {
 		this.primaryStage = primaryStage;
 		this.primaryStage.setTitle("Cloud of Things - Genius Client");

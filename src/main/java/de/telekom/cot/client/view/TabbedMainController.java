@@ -8,27 +8,28 @@ import com.lynden.gmapsfx.MapComponentInitializedListener;
 import com.lynden.gmapsfx.javascript.object.GoogleMap;
 import com.lynden.gmapsfx.javascript.object.LatLong;
 import com.lynden.gmapsfx.javascript.object.MapOptions;
+import com.lynden.gmapsfx.javascript.object.MapTypeIdEnum;
 import com.lynden.gmapsfx.javascript.object.Marker;
 import com.lynden.gmapsfx.javascript.object.MarkerOptions;
 
 import de.telekom.cot.client.MainApp;
 import de.telekom.cot.client.model.ManagedObject;
-
-import com.lynden.gmapsfx.javascript.object.MapTypeIdEnum;
-
+import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.util.Callback;
 
 public class TabbedMainController implements Initializable, MapComponentInitializedListener {
 
@@ -42,7 +43,7 @@ public class TabbedMainController implements Initializable, MapComponentInitiali
 
 	@FXML
 	private TabPane tabPane;
-	
+
 	@FXML
 	private TableColumn<ManagedObject, String> deviceNameColumn;
 
@@ -53,7 +54,6 @@ public class TabbedMainController implements Initializable, MapComponentInitiali
 
 	@FXML
 	private TableView<ManagedObject> tableView;
-
 
 	@Override
 	public void mapInitialized() {
@@ -81,7 +81,7 @@ public class TabbedMainController implements Initializable, MapComponentInitiali
 	public void initialize(URL location, ResourceBundle resources) {
 		mapView.addMapInializedListener(this);
 
-	    deviceNameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
+		deviceNameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
 
 		tableView.getSelectionModel().selectedItemProperty()
 				.addListener((observable, oldValue, newValue) -> showDevice(newValue));
@@ -94,44 +94,72 @@ public class TabbedMainController implements Initializable, MapComponentInitiali
 				mainApp.getDeviceData().get(selectedIndex).setName(s2);
 			}
 		});
+
+		tableView.setRowFactory(new Callback<TableView<ManagedObject>, TableRow<ManagedObject>>() {
+			@Override
+			public TableRow<ManagedObject> call(TableView<ManagedObject> tableView) {
+				final TableRow<ManagedObject> row = new TableRow<>();
+				final ContextMenu rowMenu = new ContextMenu();
+
+				MenuItem removeItem = new MenuItem("Delete");
+				removeItem.setOnAction(new EventHandler<ActionEvent>() {
+					@Override
+					public void handle(ActionEvent event) {
+						handleDeleteDevice();
+					}
+				});
+				rowMenu.getItems().addAll(removeItem);
+
+				// only display context menu for non-null items:
+				row.contextMenuProperty().bind(Bindings.when(Bindings.isNotNull(row.itemProperty())).then(rowMenu)
+						.otherwise((ContextMenu) null));
+				return row;
+			}
+		});
 	}
 
 	public void setMainApp(MainApp mainApp) {
 		this.mainApp = mainApp;
 		tableView.setItems(mainApp.getDeviceData());
-//		mainApp.getDeviceData().addListener(new ListChangeListener<String>() {
-//
-//			@Override
-//			public void onChanged(javafx.collections.ListChangeListener.Change<? extends String> c) {
-//				updateTreeList();
-//			}
-//
-//		});
-	}
-
-	private void updateTreeList() {
-		
-//		ObservableList<String> list = mainApp.getDeviceData();
-//		tableView.getRoot().getChildren().clear();
-//		for (String string : list) {
-//			TreeItem<String> item = new TreeItem<String>(string);
-//			tableView.getRoot().getChildren().add(item);
-//		}
 	}
 
 	public void showDevice(ManagedObject newValue) {
 		if (newValue != null) {
 			deviceName.setText(newValue.getName());
-			
+
 		} else {
 			deviceName.setText("");
 		}
 	}
 
+	/**
+	 * Removes the device from the Cloud of Things.
+	 */
+	@FXML
+	private void handleUnregisterDevice() {
+		System.out.println("Not implemented yet");
+	}
+
+	/**
+	 * Check if device is already in the register devices list.
+	 */
+	@FXML
+	private void handleRegisterDeviceStep1() {
+		System.out.println("Not implemented yet");
+	}
+
+	/**
+	 * Tries to do all the stuff to create a Device.
+	 */
+	@FXML
+	private void handleRegisterDeviceStep2() {
+		System.out.println("Not implemented yet");
+	}
+
 	@FXML
 	private void handleDeleteDevice() {
 		int selectedIndex = tableView.getSelectionModel().getSelectedIndex();
-//		rootItem.getChildren().remove(selectedIndex - 1);
+		mainApp.getDeviceData().remove(selectedIndex);
 	}
 
 }
