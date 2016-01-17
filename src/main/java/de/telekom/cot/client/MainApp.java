@@ -84,4 +84,9 @@ public class MainApp extends Application {
 	public static void main(String[] args) {
 		launch(args);
 	}
+
+
+	public void showDevice(Object newValue) {
+		System.out.println("Value: "+ newValue);
+	}
 }

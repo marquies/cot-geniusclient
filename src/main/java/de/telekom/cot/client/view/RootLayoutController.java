@@ -91,6 +91,16 @@ public class RootLayoutController implements Initializable {
 		TreeItem<String> rootItem = new TreeItem<>(new String("Devices"));
 		rootItem.setExpanded(true);
 		treeView.setRoot(rootItem);
+		
+//      personTable.getSelectionModel().selectedItemProperty().addListener(
+//      (observable, oldValue, newValue) -> showPersonDetails(newValue));
+		
+		treeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> showDevice(newValue));
+
+	}
+
+	private void showDevice(Object newValue) {
+		mainApp.showDevice(newValue);
 	}
 
 	@FXML
