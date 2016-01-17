@@ -4,7 +4,7 @@ This is a CLient for the Deutsche Telekom Cloud of Things service. It is intende
 
 #Usage
 
-**During Development**
+*During Development*
 
 1. Clone my GMapsFX Repo `git@github.com:marquies/GMapsFX.git`
 2. Build the snapshot with `mvn install`
