@@ -2,7 +2,7 @@ package de.telekom.cot.client.view;
 
 import java.util.regex.Pattern;
 
-import de.telekom.cot.client.model.CotConnectionSettingsObject;
+import de.telekom.cot.client.model.CotConnectionSettings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -19,7 +19,7 @@ public class CotSettingsDialogController {
 
 	ObservableList<String> connectionMethodList = FXCollections.observableArrayList("HTTP", "MQTT");
 
-	CotConnectionSettingsObject cotConnectionSettingsObject;
+	CotConnectionSettings cotConnectionSettingsObject;
 
 	private Pattern p = Pattern.compile("[^a-z0-9]", Pattern.CASE_INSENSITIVE);;
 
@@ -69,7 +69,7 @@ public class CotSettingsDialogController {
 	private void handleOk() {
 		if (isInputValid()) {
 			cotConnectionSettingsObject.setBaseUrl(serverBackend.getValue());
-			cotConnectionSettingsObject.setConnnectionMethod(connectionMethod.getValue());
+			cotConnectionSettingsObject.setConnectionMethod(connectionMethod.getValue());
 			cotConnectionSettingsObject.setTenant(tenant.getText());
 			okClicked = true;
 			dialogStage.close();
@@ -111,7 +111,7 @@ public class CotSettingsDialogController {
 		dialogStage.close();
 	}
 
-	public void setCotConnectionSettings(CotConnectionSettingsObject cotConnectionSettingsObject) {
+	public void setCotConnectionSettings(CotConnectionSettings cotConnectionSettingsObject) {
 
 		this.cotConnectionSettingsObject = cotConnectionSettingsObject;
 
