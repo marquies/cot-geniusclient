@@ -52,4 +52,9 @@ public class RootLayoutController implements Initializable {
 		String device1 = new String("New Device");
 		mainApp.getDeviceData().add(new ManagedObject(device1));
 	}
+	
+	@FXML
+	private void openCotSettingsDialog() {
+		mainApp.showCotSettingsDialog();
+	}
 }

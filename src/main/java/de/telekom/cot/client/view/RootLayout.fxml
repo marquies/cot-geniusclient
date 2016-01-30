@@ -17,7 +17,7 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Cloud of Things">
             <items>
-              <MenuItem mnemonicParsing="false" text="Connection Settings..." />
+              <MenuItem mnemonicParsing="false" onAction="#openCotSettingsDialog" text="Connection Settings..." />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">

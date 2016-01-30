@@ -2,7 +2,9 @@ package de.telekom.cot.client;
 
 import java.io.IOException;
 
+import de.telekom.cot.client.model.CotConnectionSettingsObject;
 import de.telekom.cot.client.model.ManagedObject;
+import de.telekom.cot.client.view.CotSettingsDialogController;
 import de.telekom.cot.client.view.RootLayoutController;
 import de.telekom.cot.client.view.TabbedMainController;
 import javafx.application.Application;
@@ -13,6 +15,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.TreeItem;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class MainApp extends Application {
@@ -21,9 +24,14 @@ public class MainApp extends Application {
 	private TreeItem<String> rootItem;
 	private ObservableList<ManagedObject> deviceData = FXCollections.observableArrayList();
 	private TabbedMainController tabbedMainController;
+	private CotConnectionSettingsObject cotConnectionSettingsObject;
 
 	public ObservableList<ManagedObject> getDeviceData() {
 		return deviceData;
+	}
+	
+	public CotConnectionSettingsObject getConnectionSettings() {
+		return cotConnectionSettingsObject;
 	}
 	
 
@@ -56,6 +64,8 @@ public class MainApp extends Application {
 	public void start(Stage primaryStage) {
 		this.primaryStage = primaryStage;
 		this.primaryStage.setTitle("Cloud of Things - Genius Client");
+		
+		cotConnectionSettingsObject = new CotConnectionSettingsObject("test-ram.m2m.telekom.com", "testing", "http");
 
 		initRootLayout();
 
@@ -76,6 +86,36 @@ public class MainApp extends Application {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public boolean showCotSettingsDialog() {
+	    try {
+	        // Load the fxml file and create a new stage for the popup dialog.
+	        FXMLLoader loader = new FXMLLoader();
+	        loader.setLocation(MainApp.class.getResource("view/CotSettingsDialog.fxml"));
+	        AnchorPane page = (AnchorPane) loader.load();
+
+	        // Create the dialog Stage.
+	        Stage dialogStage = new Stage();
+	        dialogStage.setTitle("CoT Connection Settings");
+	        dialogStage.initModality(Modality.WINDOW_MODAL);
+	        dialogStage.initOwner(primaryStage);
+	        Scene scene = new Scene(page);
+	        dialogStage.setScene(scene);
+
+	        // Set the person into the controller.
+	        CotSettingsDialogController controller = loader.getController();
+	        controller.setDialogStage(dialogStage);
+	        controller.setCotConnectionSettings(cotConnectionSettingsObject);
+	        
+	        // Show the dialog and wait until the user closes it
+	        dialogStage.showAndWait();
+
+	        return controller.isOkClicked();
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
 	}
 
 
