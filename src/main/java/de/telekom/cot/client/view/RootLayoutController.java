@@ -64,7 +64,7 @@ public class RootLayoutController implements Initializable {
         File file = fileChooser.showOpenDialog(mainApp.getPrimaryStage());
 
         if (file != null) {
-            mainApp.loadCotConnectionSettingsDataFromFile(file);
+            mainApp.loadClientDataFromFile(file);
         }
     }
 
@@ -76,7 +76,7 @@ public class RootLayoutController implements Initializable {
     private void handleSave() {
         File personFile = mainApp.getPersonFilePath();
         if (personFile != null) {
-            mainApp.savePersonDataToFile(personFile);
+            mainApp.saveClientDataToFile(personFile);
         } else {
             handleSaveAs();
         }
@@ -102,7 +102,7 @@ public class RootLayoutController implements Initializable {
             if (!file.getPath().endsWith(".xml")) {
                 file = new File(file.getPath() + ".xml");
             }
-            mainApp.savePersonDataToFile(file);
+            mainApp.saveClientDataToFile(file);
         }
     }
 

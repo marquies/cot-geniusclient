@@ -9,7 +9,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import de.telekom.cot.client.model.CotConnectionSettings;
-import de.telekom.cot.client.model.CotConnectionSettingsWrapper;
+import de.telekom.cot.client.model.CotClientDataWrapper;
 import de.telekom.cot.client.model.ManagedObject;
 import de.telekom.cot.client.view.CotSettingsDialogController;
 import de.telekom.cot.client.view.RootLayoutController;
@@ -172,15 +172,17 @@ public class MainApp extends Application {
 	 * 
 	 * @param file
 	 */
-	public void loadCotConnectionSettingsDataFromFile(File file) {
+	public void loadClientDataFromFile(File file) {
 	    try {
 	        JAXBContext context = JAXBContext
-	                .newInstance(CotConnectionSettingsWrapper.class);
+	                .newInstance(CotClientDataWrapper.class);
 	        Unmarshaller um = context.createUnmarshaller();
 
 	        // Reading XML from the file and unmarshalling.
-	        CotConnectionSettingsWrapper wrapper = (CotConnectionSettingsWrapper) um.unmarshal(file);
+	        CotClientDataWrapper wrapper = (CotClientDataWrapper) um.unmarshal(file);
 	        cotConnectionSettingsObject = wrapper.getCotConnectionSettingsObject();
+	        deviceData.clear();
+	        deviceData.addAll(wrapper.getDevices());
 	        
 
 	        // Save the file path to the registry.
@@ -191,7 +193,7 @@ public class MainApp extends Application {
 	        alert.setTitle("Error");
 	        alert.setHeaderText("Could not load data");
 	        alert.setContentText("Could not load data from file:\n" + file.getPath());
-
+	        e.printStackTrace();
 	        alert.showAndWait();
 	    }
 	}
@@ -201,16 +203,17 @@ public class MainApp extends Application {
 	 * 
 	 * @param file
 	 */
-	public void savePersonDataToFile(File file) {
+	public void saveClientDataToFile(File file) {
 	    try {
 	        JAXBContext context = JAXBContext
-	                .newInstance(CotConnectionSettingsWrapper.class);
+	                .newInstance(CotClientDataWrapper.class);
 	        Marshaller m = context.createMarshaller();
 	        m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
 	        // Wrapping our person data.
-	        CotConnectionSettingsWrapper wrapper = new CotConnectionSettingsWrapper();
+	        CotClientDataWrapper wrapper = new CotClientDataWrapper();
 	        wrapper.setCotConnectionSettingsObject(cotConnectionSettingsObject);
+	        wrapper.setDevices(deviceData);
 
 	        // Marshalling and saving XML to the file.
 	        m.marshal(wrapper, file);
@@ -222,7 +225,7 @@ public class MainApp extends Application {
 	        alert.setTitle("Error");
 	        alert.setHeaderText("Could not save data");
 	        alert.setContentText("Could not save data to file:\n" + file.getPath());
-
+	        e.printStackTrace();
 	        alert.showAndWait();
 	    }
 	}

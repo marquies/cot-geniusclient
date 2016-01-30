@@ -7,7 +7,7 @@ public class ManagedObject {
 	private final StringProperty name;
 
 	public ManagedObject() {
-		name = null;
+		name = new SimpleStringProperty();
 	}
 
 	public ManagedObject(String name) {
