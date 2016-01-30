@@ -1,6 +1,6 @@
 #Cloud of Things - Genius Client
 
-This is a CLient for the Deutsche Telekom Cloud of Things service. It is intended for testing and demonstration purposes.
+This is a Client for the Deutsche Telekom Cloud of Things service. It is intended for testing and demonstration purposes.
 
 #Usage
 
