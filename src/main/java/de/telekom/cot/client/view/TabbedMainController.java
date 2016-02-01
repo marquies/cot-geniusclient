@@ -1,6 +1,5 @@
 package de.telekom.cot.client.view;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -13,10 +12,8 @@ import com.lynden.gmapsfx.javascript.object.MapTypeIdEnum;
 import com.lynden.gmapsfx.javascript.object.Marker;
 import com.lynden.gmapsfx.javascript.object.MarkerOptions;
 import com.telekom.m2m.cot.restsdk.CloudOfThingsPlatform;
-import com.telekom.m2m.cot.restsdk.devicecontrol.DeviceControlApi;
 import com.telekom.m2m.cot.restsdk.devicecontrol.DeviceCredentials;
 import com.telekom.m2m.cot.restsdk.devicecontrol.DeviceCredentialsApi;
-import com.telekom.m2m.cot.restsdk.identity.IdentityApi;
 import com.telekom.m2m.cot.restsdk.inventory.InventoryApi;
 import com.telekom.m2m.cot.restsdk.inventory.ManagedObject;
 
@@ -30,6 +27,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
@@ -38,7 +36,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert.AlertType;
 import javafx.util.Callback;
 
 public class TabbedMainController implements Initializable, MapComponentInitializedListener {
@@ -165,7 +162,7 @@ public class TabbedMainController implements Initializable, MapComponentInitiali
 					imo.getDevicePassword());
 			InventoryApi inventoryApi = platform.getInventoryApi();
 			inventoryApi.delete(imo.getId());
-			
+
 			idLabel.setText(null);
 			imo.setId(null);
 		} catch (Exception e) {
@@ -216,7 +213,7 @@ public class TabbedMainController implements Initializable, MapComponentInitiali
 			InventoryApi inventoryApi = platform.getInventoryApi();
 			ManagedObject mo = new ManagedObject();
 			mo.setName(imo.getName());
-	        mo.set("c8y_IsDevice", new Object());
+			mo.set("c8y_IsDevice", new Object());
 			ManagedObject resultedMo = inventoryApi.create(mo);
 			imo.setId(resultedMo.getId());
 			idLabel.setText(resultedMo.getId());
