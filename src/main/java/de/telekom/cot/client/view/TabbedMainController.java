@@ -157,7 +157,21 @@ public class TabbedMainController implements Initializable, MapComponentInitiali
 	 */
 	@FXML
 	private void handleUnregisterDevice() {
-		System.out.println("Not implemented yet");
+		int selectedIndex = tableView.getSelectionModel().getSelectedIndex();
+		InternalManagedObject imo = mainApp.getDeviceData().get(selectedIndex);
+		CloudOfThingsPlatform platform;
+		try {
+			platform = new CloudOfThingsPlatform(imo.getDeviceTenant(), imo.getDeviceUsername(),
+					imo.getDevicePassword());
+			InventoryApi inventoryApi = platform.getInventoryApi();
+			inventoryApi.delete(imo.getId());
+			
+			idLabel.setText(null);
+			imo.setId(null);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**
