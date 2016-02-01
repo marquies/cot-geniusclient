@@ -8,9 +8,11 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
-import de.telekom.cot.client.model.CotConnectionSettings;
+import com.telekom.m2m.cot.restsdk.CloudOfThingsPlatform;
+
 import de.telekom.cot.client.model.CotClientDataWrapper;
-import de.telekom.cot.client.model.ManagedObject;
+import de.telekom.cot.client.model.CotConnectionSettings;
+import de.telekom.cot.client.model.InternalManagedObject;
 import de.telekom.cot.client.view.CotSettingsDialogController;
 import de.telekom.cot.client.view.RootLayoutController;
 import de.telekom.cot.client.view.TabbedMainController;
@@ -27,7 +29,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public class MainApp extends Application {
+public class MainApp extends Application  {
 	private Stage primaryStage;
 	public Stage getPrimaryStage() {
 		return primaryStage;
@@ -35,17 +37,25 @@ public class MainApp extends Application {
 
 	private BorderPane rootLayout;
 	private TreeItem<String> rootItem;
-	private ObservableList<ManagedObject> deviceData = FXCollections.observableArrayList();
+	private ObservableList<InternalManagedObject> deviceData = FXCollections.observableArrayList();
 	private TabbedMainController tabbedMainController;
 	private CotConnectionSettings cotConnectionSettingsObject;
+	
+	private CloudOfThingsPlatform cotPlatform;
 
-	public ObservableList<ManagedObject> getDeviceData() {
+	public CloudOfThingsPlatform getCotPlatform() {
+		return cotPlatform;
+	}
+
+	public ObservableList<InternalManagedObject> getDeviceData() {
 		return deviceData;
 	}
 	
 	public CotConnectionSettings getConnectionSettings() {
 		return cotConnectionSettingsObject;
 	}
+	
+	
 	
 
 	private void initRootLayout() {
@@ -78,8 +88,14 @@ public class MainApp extends Application {
 		this.primaryStage = primaryStage;
 		this.primaryStage.setTitle("Deutsche Telekom - Cloud of Things - Genius Client");
 		
-		cotConnectionSettingsObject = new CotConnectionSettings("test-ram.m2m.telekom.com", "testing", "http");
-
+		cotConnectionSettingsObject = new CotConnectionSettings("test-ram.m2m.telekom.com", "testing", "HTTP");
+		try {
+			cotPlatform = new CloudOfThingsPlatform(cotConnectionSettingsObject.getTenant(), "patrick-restplay", "Test1234");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		initRootLayout();
 
 		showPersonOverview();
@@ -162,7 +178,7 @@ public class MainApp extends Application {
 	}
 
 
-	public void showDevice(ManagedObject newValue) {
+	public void showDevice(InternalManagedObject newValue) {
 		tabbedMainController.showDevice(newValue);
 	}
 	
@@ -229,6 +245,7 @@ public class MainApp extends Application {
 	        alert.showAndWait();
 	    }
 	}
+
 	
 	
 }

@@ -12,7 +12,7 @@ import javafx.collections.ObservableList;
 public class CotClientDataWrapper {
 
 	private CotConnectionSettings cotConnectionSettingsObject;
-	private List<ManagedObject> devices;
+	private List<InternalManagedObject> devices;
 	
 
 	public CotConnectionSettings getCotConnectionSettingsObject() {
@@ -26,11 +26,11 @@ public class CotClientDataWrapper {
 
 	@XmlElementWrapper(name = "devices")
 	@XmlElement(name = "device")
-	public void setDevices(List<ManagedObject> devices) {
+	public void setDevices(List<InternalManagedObject> devices) {
 		this.devices = devices;
 	}
 
-	public List<ManagedObject> getDevices() {
+	public List<InternalManagedObject> getDevices() {
 		return devices;
 	}
 

@@ -1,5 +1,6 @@
 package de.telekom.cot.client.view;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -11,9 +12,16 @@ import com.lynden.gmapsfx.javascript.object.MapOptions;
 import com.lynden.gmapsfx.javascript.object.MapTypeIdEnum;
 import com.lynden.gmapsfx.javascript.object.Marker;
 import com.lynden.gmapsfx.javascript.object.MarkerOptions;
+import com.telekom.m2m.cot.restsdk.CloudOfThingsPlatform;
+import com.telekom.m2m.cot.restsdk.devicecontrol.DeviceControlApi;
+import com.telekom.m2m.cot.restsdk.devicecontrol.DeviceCredentials;
+import com.telekom.m2m.cot.restsdk.devicecontrol.DeviceCredentialsApi;
+import com.telekom.m2m.cot.restsdk.identity.IdentityApi;
+import com.telekom.m2m.cot.restsdk.inventory.InventoryApi;
+import com.telekom.m2m.cot.restsdk.inventory.ManagedObject;
 
 import de.telekom.cot.client.MainApp;
-import de.telekom.cot.client.model.ManagedObject;
+import de.telekom.cot.client.model.InternalManagedObject;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -21,6 +29,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
@@ -29,6 +38,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.util.Callback;
 
 public class TabbedMainController implements Initializable, MapComponentInitializedListener {
@@ -42,10 +52,16 @@ public class TabbedMainController implements Initializable, MapComponentInitiali
 	private Label idLabel;
 
 	@FXML
+	private Label deviceUsernameLabel;
+
+	@FXML
+	private Label devicePasswordLabel;
+
+	@FXML
 	private TabPane tabPane;
 
 	@FXML
-	private TableColumn<ManagedObject, String> deviceNameColumn;
+	private TableColumn<InternalManagedObject, String> deviceNameColumn;
 
 	@FXML
 	private TextField deviceName;
@@ -53,7 +69,7 @@ public class TabbedMainController implements Initializable, MapComponentInitiali
 	private MainApp mainApp;
 
 	@FXML
-	private TableView<ManagedObject> tableView;
+	private TableView<InternalManagedObject> tableView;
 
 	@Override
 	public void mapInitialized() {
@@ -89,16 +105,15 @@ public class TabbedMainController implements Initializable, MapComponentInitiali
 		deviceName.textProperty().addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observableValue, String s, String s2) {
-
 				int selectedIndex = tableView.getSelectionModel().getSelectedIndex();
 				mainApp.getDeviceData().get(selectedIndex).setName(s2);
 			}
 		});
 
-		tableView.setRowFactory(new Callback<TableView<ManagedObject>, TableRow<ManagedObject>>() {
+		tableView.setRowFactory(new Callback<TableView<InternalManagedObject>, TableRow<InternalManagedObject>>() {
 			@Override
-			public TableRow<ManagedObject> call(TableView<ManagedObject> tableView) {
-				final TableRow<ManagedObject> row = new TableRow<>();
+			public TableRow<InternalManagedObject> call(TableView<InternalManagedObject> tableView) {
+				final TableRow<InternalManagedObject> row = new TableRow<>();
 				final ContextMenu rowMenu = new ContextMenu();
 
 				MenuItem removeItem = new MenuItem("Delete");
@@ -123,12 +138,17 @@ public class TabbedMainController implements Initializable, MapComponentInitiali
 		tableView.setItems(mainApp.getDeviceData());
 	}
 
-	public void showDevice(ManagedObject newValue) {
+	public void showDevice(InternalManagedObject newValue) {
 		if (newValue != null) {
+			idLabel.setText(newValue.getId());
 			deviceName.setText(newValue.getName());
-
+			deviceUsernameLabel.setText(newValue.getDeviceUsername());
+			devicePasswordLabel.setText(newValue.getDevicePassword());
 		} else {
+			idLabel.setText("");
 			deviceName.setText("");
+			deviceUsernameLabel.setText("");
+			devicePasswordLabel.setText("");
 		}
 	}
 
@@ -145,7 +165,28 @@ public class TabbedMainController implements Initializable, MapComponentInitiali
 	 */
 	@FXML
 	private void handleRegisterDeviceStep1() {
-		System.out.println("Not implemented yet");
+		try {
+			CloudOfThingsPlatform platform = CloudOfThingsPlatform.getPlatformToRegisterDevice();
+			DeviceCredentialsApi deviceCredentialsApi = platform.getDeviceCredentialsApi();
+			DeviceCredentials result = deviceCredentialsApi.getCredentials(deviceName.getText());
+
+			deviceUsernameLabel.setText(result.getUsername());
+			devicePasswordLabel.setText(result.getPassword());
+
+			int selectedIndex = tableView.getSelectionModel().getSelectedIndex();
+			mainApp.getDeviceData().get(selectedIndex).setDeviceTenant(result.getTenantId());
+			mainApp.getDeviceData().get(selectedIndex).setDeviceUsername(result.getUsername());
+			mainApp.getDeviceData().get(selectedIndex).setDevicePassword(result.getPassword());
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Error");
+			alert.setHeaderText("Error registering device");
+			alert.setContentText(e.getMessage());
+			e.printStackTrace();
+			alert.showAndWait();
+		}
 	}
 
 	/**
@@ -153,7 +194,28 @@ public class TabbedMainController implements Initializable, MapComponentInitiali
 	 */
 	@FXML
 	private void handleRegisterDeviceStep2() {
-		System.out.println("Not implemented yet");
+		int selectedIndex = tableView.getSelectionModel().getSelectedIndex();
+		InternalManagedObject imo = mainApp.getDeviceData().get(selectedIndex);
+		try {
+			CloudOfThingsPlatform platform = new CloudOfThingsPlatform(imo.getDeviceTenant(), imo.getDeviceUsername(),
+					imo.getDevicePassword());
+			InventoryApi inventoryApi = platform.getInventoryApi();
+			ManagedObject mo = new ManagedObject();
+			mo.setName(imo.getName());
+	        mo.set("c8y_IsDevice", new Object());
+			ManagedObject resultedMo = inventoryApi.create(mo);
+			imo.setId(resultedMo.getId());
+			idLabel.setText(resultedMo.getId());
+		} catch (Exception e) {
+			e.printStackTrace();
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Error");
+			alert.setHeaderText("Error registering device");
+			alert.setContentText(e.getMessage());
+			e.printStackTrace();
+			alert.showAndWait();
+		}
+
 	}
 
 	@FXML

@@ -5,7 +5,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import de.telekom.cot.client.MainApp;
-import de.telekom.cot.client.model.ManagedObject;
+import de.telekom.cot.client.model.InternalManagedObject;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -40,7 +40,7 @@ public class RootLayoutController implements Initializable {
 	@FXML
 	private void addNewDevice() {
 		String device1 = new String("New Device");
-		mainApp.getDeviceData().add(new ManagedObject(device1));
+		mainApp.getDeviceData().add(new InternalManagedObject("", device1, "", "", ""));
 	}
 	
 	@FXML
