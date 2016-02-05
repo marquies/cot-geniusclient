@@ -1,10 +1,13 @@
 package de.telekom.cot.client.view;
 
 import java.net.URL;
+import java.util.Date;
 import java.util.ResourceBundle;
 
 import com.lynden.gmapsfx.GoogleMapView;
 import com.lynden.gmapsfx.MapComponentInitializedListener;
+import com.lynden.gmapsfx.javascript.event.UIEventHandler;
+import com.lynden.gmapsfx.javascript.event.UIEventType;
 import com.lynden.gmapsfx.javascript.object.GoogleMap;
 import com.lynden.gmapsfx.javascript.object.LatLong;
 import com.lynden.gmapsfx.javascript.object.MapOptions;
@@ -14,11 +17,14 @@ import com.lynden.gmapsfx.javascript.object.MarkerOptions;
 import com.telekom.m2m.cot.restsdk.CloudOfThingsPlatform;
 import com.telekom.m2m.cot.restsdk.devicecontrol.DeviceCredentials;
 import com.telekom.m2m.cot.restsdk.devicecontrol.DeviceCredentialsApi;
+import com.telekom.m2m.cot.restsdk.event.Event;
+import com.telekom.m2m.cot.restsdk.event.EventApi;
 import com.telekom.m2m.cot.restsdk.inventory.InventoryApi;
 import com.telekom.m2m.cot.restsdk.inventory.ManagedObject;
 
 import de.telekom.cot.client.MainApp;
 import de.telekom.cot.client.model.InternalManagedObject;
+import de.telekom.cot.client.model.Position;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -37,6 +43,7 @@ import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.util.Callback;
+import netscape.javascript.JSObject;
 
 public class TabbedMainController implements Initializable, MapComponentInitializedListener {
 
@@ -88,6 +95,43 @@ public class TabbedMainController implements Initializable, MapComponentInitiali
 		marker.setDraggable(true);
 
 		map.addMarker(marker);
+		map.addUIEventHandler(marker, UIEventType.dragend, new UIEventHandler() {
+
+			@Override
+			public void handle(JSObject obj) {
+				LatLong ll = new LatLong((JSObject) obj.getMember("latLng"));
+
+				sendGeopositionEvent(ll);
+			}
+		});
+	}
+
+	private void sendGeopositionEvent(LatLong ll) {
+		CloudOfThingsPlatform platform;
+		InternalManagedObject imo = getSelectedManagedObject();
+		platform = new CloudOfThingsPlatform(imo.getDeviceTenant(), imo.getDeviceUsername(), imo.getDevicePassword());
+		InventoryApi inventoryApi = platform.getInventoryApi();
+		ManagedObject mo = inventoryApi.get(imo.getId());
+
+		Position p = new Position();
+		p.setAlt(0);
+		p.setLat((float) ll.getLatitude());
+		p.setLng((float) ll.getLongitude());
+
+		Event event = new Event();
+		event.setSource(mo);
+		event.setTime(new Date());
+		event.setText("Position update by Client");
+		event.setType("c8y_LocationUpdate");
+		event.set("c8y_Position", p);
+		EventApi eventAPI = platform.getEventApi();
+		eventAPI.create(event);
+	}
+
+	private InternalManagedObject getSelectedManagedObject() {
+		int selectedIndex = tableView.getSelectionModel().getSelectedIndex();
+		InternalManagedObject imo = mainApp.getDeviceData().get(selectedIndex);
+		return imo;
 	}
 
 	@Override
@@ -154,8 +198,7 @@ public class TabbedMainController implements Initializable, MapComponentInitiali
 	 */
 	@FXML
 	private void handleUnregisterDevice() {
-		int selectedIndex = tableView.getSelectionModel().getSelectedIndex();
-		InternalManagedObject imo = mainApp.getDeviceData().get(selectedIndex);
+		InternalManagedObject imo = getSelectedManagedObject();
 		CloudOfThingsPlatform platform;
 		try {
 			platform = new CloudOfThingsPlatform(imo.getDeviceTenant(), imo.getDeviceUsername(),
@@ -190,7 +233,6 @@ public class TabbedMainController implements Initializable, MapComponentInitiali
 			mainApp.getDeviceData().get(selectedIndex).setDevicePassword(result.getPassword());
 
 		} catch (Exception e) {
-			e.printStackTrace();
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.setTitle("Error");
 			alert.setHeaderText("Error registering device");
@@ -205,8 +247,7 @@ public class TabbedMainController implements Initializable, MapComponentInitiali
 	 */
 	@FXML
 	private void handleRegisterDeviceStep2() {
-		int selectedIndex = tableView.getSelectionModel().getSelectedIndex();
-		InternalManagedObject imo = mainApp.getDeviceData().get(selectedIndex);
+		InternalManagedObject imo = getSelectedManagedObject();
 		try {
 			CloudOfThingsPlatform platform = new CloudOfThingsPlatform(imo.getDeviceTenant(), imo.getDeviceUsername(),
 					imo.getDevicePassword());
@@ -218,7 +259,6 @@ public class TabbedMainController implements Initializable, MapComponentInitiali
 			imo.setId(resultedMo.getId());
 			idLabel.setText(resultedMo.getId());
 		} catch (Exception e) {
-			e.printStackTrace();
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.setTitle("Error");
 			alert.setHeaderText("Error registering device");
